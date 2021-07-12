@@ -1,7 +1,7 @@
 /*
  * @Author: 洛寒
  * @Date: 2021-07-07 18:26:30
- * @LastEditTime: 2021-07-12 18:57:16
+ * @LastEditTime: 2021-07-12 19:06:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /gulp-test/gulpfile.js
@@ -18,7 +18,7 @@ const webserver =require('gulp-webserver')
 const include=require('gulp-file-include')
 const pxtorem = require('gulp-pxtorem');
 const pxtoremOptions = {
-    rootValue: 100,
+    rootValue: 10,
     unitPrecision: 6,
     propList: ['*'],
     selectorBlackList: [],
@@ -35,7 +35,7 @@ const postcssOptions = {
 
 const cssHandler=function(){
     return gulp
-    .src('./src/less/*.less')
+    .src('./src/less/*/*.less')
     .pipe(gulpLess({
         javascriptEnabled: true
     }))
