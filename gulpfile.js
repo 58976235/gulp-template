@@ -1,13 +1,13 @@
 /*
  * @Author: 洛寒
  * @Date: 2021-07-07 18:26:30
- * @LastEditTime: 2021-07-07 20:40:08
+ * @LastEditTime: 2021-07-12 18:57:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /gulp-test/gulpfile.js
  */
 const gulp = require('gulp')
-const sass=require('gulp-sass')(require('sass'))
+const gulpLess = require('gulp-less');
 const autoprefixer=require('gulp-autoprefixer')
 const cssmin = require('gulp-cssmin')
 const uglify=require('gulp-uglify')
@@ -16,11 +16,31 @@ const htmlmin = require('gulp-htmlmin')
 const del=require('del')
 const webserver =require('gulp-webserver')
 const include=require('gulp-file-include')
+const pxtorem = require('gulp-pxtorem');
+const pxtoremOptions = {
+    rootValue: 100,
+    unitPrecision: 6,
+    propList: ['*'],
+    selectorBlackList: [],
+    replace: true,
+    mediaQuery: false,
+    minPixelValue: 2,
+    exclude: /node_modules/i
+}
+const postcssOptions = {
+    processors: [
+        autoprefixer({ overrideBrowserslist: ['> 0.15% in CN'] })
+    ]
+}
+
 const cssHandler=function(){
     return gulp
-    .src('./src/scss/*.scss')
-    .pipe(sass())
+    .src('./src/less/*.less')
+    .pipe(gulpLess({
+        javascriptEnabled: true
+    }))
     .pipe(autoprefixer())
+    .pipe(pxtorem(pxtoremOptions, postcssOptions))
     .pipe(cssmin())
     .pipe(gulp.dest('./dist/css'))
 }
@@ -78,7 +98,7 @@ const webHandler=function(){
 }
 
 const watchHandler=function(){
-    gulp.watch('./src/scss/*.scss',cssHandler),
+    gulp.watch('./src/less/*.less',cssHandler),
     gulp.watch('./src/js/*.js',jsHandler),
     gulp.watch('./src/html/*.html',htmlHandler),
     gulp.watch('./src/components/*.html',htmlHandler)

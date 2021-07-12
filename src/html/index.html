@@ -1,7 +1,7 @@
 <!--
  * @Author: 洛寒
  * @Date: 2021-07-07 18:27:28
- * @LastEditTime: 2021-07-07 20:44:09
+ * @LastEditTime: 2021-07-12 18:52:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /gulp-test/src/html/index.html
@@ -13,14 +13,64 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../css/index.css">
 </head>
 <body>
+    <script type="text/javascript">
+        ;
+        (function(win, doc) {
+            var docEl = doc.documentElement;
+            var appVersion = win.navigator.appVersion;
+            var isAndroid = appVersion.match(/android/gi);
+            var isIPhone = appVersion.match(/iphone/gi);
+            var devicePixelRatio = win.devicePixelRatio;
+            /*如果是地图页面需要在html上标注id="map"*/
+            var ismap = !!doc.getElementById('map');
+            var dpr = 1,
+                scale = 1;
+            if (!ismap) {
+                if (isIPhone) {
+                    if (devicePixelRatio >= 3) {
+                        dpr = 3
+                    } else {
+                        if (devicePixelRatio >= 2) {
+                            dpr = 2
+                        } else {
+                            dpr = 1
+                        }
+                    }
+                } else {
+                    if (devicePixelRatio >= 2) {
+                        docEl.className = "android";
+                    }
+                    dpr = 1;
+                }
+            }
+            scale = 1 / dpr;
+            var metaEl = doc.querySelector('meta[name="viewport"]');
+            if (!metaEl) {
+                metaEl = doc.createElement("meta");
+                metaEl.setAttribute("name", "viewport");
+                if (docEl.firstElementChild) {
+                    docEl.firstElementChild.appendChild(metaEl)
+                } else {
+                    var wrap = doc.createElement("div");
+                    wrap.appendChild(metaEl);
+                    doc.write(wrap.innerHTML)
+                }
+            }
+            if (dpr) {
+                metaEl.setAttribute("content", "initial-scale=" + scale + ", maximum-scale=" + scale + ", minimum-scale=" + scale + ", user-scalable=no,uc-fitscreen=yes,viewport-fit=cover");
+                docEl.style.fontSize = 16 * dpr + "px";
+            }
+            window.DPR = dpr
+        })(window, document);
+    </script>
     <script src="../js/jquery.js"></script>
-    <div>
-        @-@include('../components/head.html',{title:'静态组件',list:[{name:'luo',age:'18'},{name:'luoh',age:'24'}]})
-    </div>
-    <div>gulp</div>
-    <div>模版</div>
+    @-@include('../components/head.html',{title:'首页'})
+    <div class="aa">asd</div>
+    
+    <div class="bb">sda</div>
     <script src="../js/index.js"></script>
 </body>
 </html>
