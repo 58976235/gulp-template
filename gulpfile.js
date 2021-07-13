@@ -1,7 +1,7 @@
 /*
  * @Author: 洛寒
  * @Date: 2021-07-07 18:26:30
- * @LastEditTime: 2021-07-12 19:06:51
+ * @LastEditTime: 2021-07-13 09:23:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /gulp-test/gulpfile.js
@@ -47,7 +47,7 @@ const cssHandler=function(){
 
 const jsHandler=function(){
     return gulp
-    .src('./src/js/*.js')
+    .src('./src/js/*/*.js')
     .pipe(babel({
         presets:['@babel/env']
     }))
