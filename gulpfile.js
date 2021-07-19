@@ -1,11 +1,3 @@
-/*
- * @Author: 洛寒
- * @Date: 2021-07-07 18:26:30
- * @LastEditTime: 2021-07-13 09:23:15
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /gulp-test/gulpfile.js
- */
 const gulp = require('gulp')
 const gulpLess = require('gulp-less');
 const autoprefixer=require('gulp-autoprefixer')
