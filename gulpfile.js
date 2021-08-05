@@ -10,7 +10,7 @@ const webserver =require('gulp-webserver')
 const include=require('gulp-file-include')
 const pxtorem = require('gulp-pxtorem');
 const pxtoremOptions = {
-    rootValue: 10,
+    rootValue: 32,
     unitPrecision: 6,
     propList: ['*'],
     selectorBlackList: [],
@@ -27,7 +27,7 @@ const postcssOptions = {
 
 const cssHandler=function(){
     return gulp
-    .src('./src/less/*/*.less')
+    .src(['./src/less/**/*.less','./src/less/*.less'])
     .pipe(gulpLess({
         javascriptEnabled: true
     }))
@@ -37,9 +37,15 @@ const cssHandler=function(){
     .pipe(gulp.dest('./dist/css'))
 }
 
+const cssHandler2=function(){
+    return gulp
+        .src(['./src/css/**/*.css','./src/css/*.css'])
+        .pipe(gulp.dest('./dist/css'))
+}
+
 const jsHandler=function(){
     return gulp
-    .src('./src/js/*/*.js')
+    .src(['./src/js/**/*.js','./src/js/*.js'])
     .pipe(babel({
         presets:['@babel/env']
     }))
@@ -73,6 +79,12 @@ const imgHandler=function(){
     .pipe(gulp.dest('./dist/images'))
 }
 
+const fontHandler=function(){
+    return gulp
+    .src('./src/font/**')
+    .pipe(gulp.dest('./dist/font'))
+}
+
 const delHandler=function(){
     return del(['./dist'])
 }
@@ -90,14 +102,16 @@ const webHandler=function(){
 }
 
 const watchHandler=function(){
+    gulp.watch('./src/less/**/*.less',cssHandler),
     gulp.watch('./src/less/*.less',cssHandler),
     gulp.watch('./src/js/*.js',jsHandler),
+    gulp.watch('./src/js/**/*.js',jsHandler),
     gulp.watch('./src/html/*.html',htmlHandler),
     gulp.watch('./src/components/*.html',htmlHandler)
 }
 module.exports.default=gulp.series(
     delHandler,
-    gulp.parallel(cssHandler,jsHandler,htmlHandler,imgHandler),
+    gulp.parallel(cssHandler,jsHandler,htmlHandler,imgHandler,fontHandler,cssHandler2),
     webHandler,
     watchHandler
 )
