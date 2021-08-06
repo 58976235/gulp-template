@@ -1,15 +1,8 @@
-//弹窗
+//实例化弹窗
 let modal=new Modal({title:'测试',callback:function(){
-    $.ajax({
-        type: "POST",
-        url: "some.php",
-        data: "phone="+modal.value(),
-        success: function(msg){
-          alert( "Data Saved: " + msg );
-          //关闭弹窗
-          modal.close()
-        }
-     });
+    console.log(modal.value());
+    alert('对了')
+    modal.close()
 }})
 
 function openModal(){
