@@ -1,9 +1,18 @@
-/*
- * @Author: 洛寒
- * @Date: 2021-07-07 19:01:44
- * @LastEditTime: 2021-07-07 20:42:41
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /gulp-test/src/js/index.js
- */
-console.log('gulp模版')
+//弹窗
+let modal=new Modal({title:'测试',callback:function(){
+    $.ajax({
+        type: "POST",
+        url: "some.php",
+        data: "phone="+modal.value(),
+        success: function(msg){
+          alert( "Data Saved: " + msg );
+          //关闭弹窗
+          modal.close()
+        }
+     });
+}})
+
+function openModal(){
+    //打开弹窗
+    modal.open()
+}
