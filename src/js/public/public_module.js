@@ -1,5 +1,55 @@
-let isCheck=false
-let callbackFn=null
+//#region 下拉框
+let select_list_dom=''
+$('#select>option').each(function(i){
+    select_list_dom+='<li data-value="'+$(this).val()+'">'+$(this).text()+'</li>'
+})
+let select_isShow=false
+let select_dom=`
+<div class="select">
+        <div class="select-header">
+            <input type="text" placeholder="请选择" readonly class='select-input'>
+            <span class="iconfont select-tag">&#xe699;</span>
+        </div>
+        <ul class="select-list">`+select_list_dom+`</ul>
+    </div>
+`
+function _select_init(){
+    $('#select').hide()
+    $('#select').after(select_dom)
+    $('.select-list').hide()
+}
+
+//初始化下拉框
+_select_init()
+
+function _select_hide(){
+    select_isShow=false
+    $('.select-tag').removeClass('on')
+    $('.select-list').hide()
+}
+function _select_show(){
+    select_isShow=true
+    $('.select-tag').addClass('on')
+    $('.select-list').show()
+}
+
+$('.select-header').on('click',function(){
+    if(select_isShow){
+        _select_hide()
+    }else{
+        _select_show()
+    }
+})
+$('.select-list').on('click','li',function(){
+    $('.select-input').val($(this).text())
+    $('.select-input').data('key',$(this).data('value'))
+    _select_hide()
+})
+//#endregion
+
+//#region 留资弹窗
+let modal_isCheck=false
+let modal_callbackFn=null
 ~(function modal_dom(){
     const dom_html=`
     <div class="modal-box">
@@ -36,7 +86,7 @@ let callbackFn=null
     `
     $('body').prepend(dom_html)
     $('.modal-box').hide()
-    isCheck=false
+    modal_isCheck=false
     $('.modal-agreement-check i').hide()
     $('.modal-input').hide()
     $('.modal-alert').hide()
@@ -46,17 +96,17 @@ function modalClose(){
     $('.modal-input').hide()
 }
 $('.modal-agreement-check').on('click',function(){
-    if(isCheck){
-        isCheck=false
+    if(modal_isCheck){
+        modal_isCheck=false
         $('.modal-agreement-check i').hide()
     }else{
-        isCheck=true
+        modal_isCheck=true
         $('.modal-agreement-check i').show()
     }
 })
 
 function modalsubmit(){
-    if(isCheck){
+    if(modal_isCheck){
         let checkStr=/^[1][3,4,5,7,8][0-9]{9}$/;
         let phont=$('.modal-content-from input').val()
         if(!checkStr.test(phont)){
@@ -68,7 +118,7 @@ function modalsubmit(){
                 $('.modal-alert').hide()
             },3000)
         }else{
-            callbackFn()
+            modal_callbackFn()
         }
     }else{
         $('.modal-alert').addClass('modal-alert-error').removeClass('modal-alert-success')
@@ -111,7 +161,7 @@ class Modal{
             $('.modal-agreement a').attr('href',this.url)
         }
         if(this.callback!=undefined){
-            callbackFn=this.callback
+            modal_callbackFn=this.callback
         }
         if(title!=undefined){
             $('.modal-content-title h3').text(title)
@@ -129,7 +179,7 @@ class Modal{
             $('.modal-agreement a').attr('href',url)
         }
         if(callback!=undefined){
-            callbackFn=callback
+            modal_callbackFn=callback
         }
         $('.modal-box').show()
         $('.modal-input').show()
@@ -157,3 +207,4 @@ class Modal{
         }
     }
 }
+//#endregion
