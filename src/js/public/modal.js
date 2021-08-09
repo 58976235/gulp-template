@@ -1,5 +1,5 @@
 let isCheck=false
-let callback=null
+let callbackFn=null
 ~(function modal_dom(){
     const dom_html=`
     <div class="modal-box">
@@ -68,7 +68,7 @@ function modalsubmit(){
                 $('.modal-alert').hide()
             },3000)
         }else{
-            callback()
+            callbackFn()
         }
     }else{
         $('.modal-alert').addClass('modal-alert-error').removeClass('modal-alert-success')
@@ -94,7 +94,7 @@ class Modal{
         this.url=url
         this.callback=callback
     }
-    open(){
+    open(title,msg1,msg2,agreement,url,callback){
         if(this.title!=undefined){
             $('.modal-content-title h3').text(this.title)
         }
@@ -110,9 +110,29 @@ class Modal{
         if(this.url!=undefined){
             $('.modal-agreement a').attr('href',this.url)
         }
+        if(this.callback!=undefined){
+            callbackFn=this.callback
+        }
+        if(title!=undefined){
+            $('.modal-content-title h3').text(title)
+        }
+        if(msg1!=undefined){
+            $('.modal-content-msg1').html(msg1)
+        }
+        if(msg2!=undefined){
+            $('.modal-content-msg2').text(msg2)
+        }
+        if(agreement!=undefined){
+            $('.modal-agreement a').text(agreement)
+        }
+        if(url!=undefined){
+            $('.modal-agreement a').attr('href',url)
+        }
+        if(callback!=undefined){
+            callbackFn=callback
+        }
         $('.modal-box').show()
         $('.modal-input').show()
-        callback=this.callback
     }
     value(){
         return $('#phone').val()
