@@ -61,8 +61,8 @@ function modalsubmit(){
         let phont=$('.modal-content-from input').val()
         if(!checkStr.test(phont)){
             $('.modal-content-from input').val('')
+            $('.modal-alert').addClass('modal-alert-error').removeClass('modal-alert-success')
             $('.modal-alert').text('手机号码有误！')
-            $('.modal-alert').addClass('modal-alert-error')
             $('.modal-alert').show()
             setTimeout(()=>{
                 $('.modal-alert').hide()
@@ -71,8 +71,8 @@ function modalsubmit(){
             callback()
         }
     }else{
+        $('.modal-alert').addClass('modal-alert-error').removeClass('modal-alert-success')
         $('.modal-alert').text('请阅读并同意相关协议！')
-        $('.modal-alert').addClass('modal-alert-error')
         $('.modal-alert').show()
         setTimeout(()=>{
             $('.modal-alert').hide()
@@ -117,8 +117,23 @@ class Modal{
     value(){
         return $('#phone').val()
     }
-    close(){
-        $('.modal-box').hide()
-        $('.modal-input').hide()
+    /**
+     * @param 关闭弹窗
+     * @requires 弹窗信息
+     */
+    close(msg){
+        if(msg!=undefined){
+            $('.modal-alert').text(msg)
+            $('.modal-alert').addClass('modal-alert-success').removeClass('modal-alert-error')
+            $('.modal-alert').show()
+            $('.modal-input').hide()
+            setTimeout(()=>{
+                $('.modal-alert').hide()
+                $('.modal-box').hide()
+            },1000)
+        }else{
+            $('.modal-input').hide()
+            $('.modal-box').hide()
+        }
     }
 }

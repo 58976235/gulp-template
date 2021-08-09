@@ -1,8 +1,7 @@
 //实例化弹窗
-let modal=new Modal({title:'测试',callback:function(){
+let modal=new Modal({callback:function(){
     console.log(modal.value());
-    alert('对了')
-    modal.close()
+    modal.close('提交成功')
 }})
 
 function openModal(){
