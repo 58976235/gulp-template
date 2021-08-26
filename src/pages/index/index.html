@@ -7,7 +7,8 @@
     <meta name="keywords" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>首页</title>
-    <link rel="stylesheet" href="../css/index/index.css">
+    <!-- 引用css 都是相对路径 css文件夹下的css -->
+    <link rel="stylesheet" href="./css/index.css">
 </head>
 <body>
     <div>
@@ -22,10 +23,15 @@
     </div>
     <button onclick="openModal()">打开弹窗</button>
     <!-- 公共底部 -->
-    @-@include('../components/footer.html')
-    <script src="../js/public/font_size.js"></script>
-    <script src="../js/public/jquery.js"></script>
-    <script src="../js/public/public_module.js"></script>
-    <script src="../js/index/index.js"></script>
+    <div class="aaaaaaa"></div>
+
+    <a href="./about.html">关于</a>
+
+    <template src='footer/footer.html' title='首页' msg='打dasd' footer></template>
+
+    <script src="./js/public_js_fontSize.js"></script>
+    <script src="./js/public_jquery.js"></script>
+    <script src="./js/public_module.js"></script>
+    <script src="./js/index.js"></script>
 </body>
 </html>

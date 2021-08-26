@@ -1,0 +1,40 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-08-26 09:12:30
+ * @LastEditTime: 2021-08-26 11:00:35
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /gulp-template/src/pages/about/index.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于</title>
+    <link rel="stylesheet" href="./css/about.css">
+</head>
+<body>
+    <div>
+        <select id="select">
+            <option value="1">选择一</option>
+            <option value="2">选择二</option>
+            <option value="3">选择三</option>
+            <option value="4">选择四</option>
+            <option value="5">选择五</option>
+            <option value="6">选择六</option>
+        </select>
+    </div>
+    <button onclick="openModal()">打开弹窗</button>
+    <!-- 公共底部 -->
+    <template src='footer/footer.html' title='关于' footer></template>
+
+    <script src="./js/public_js_fontSize.js"></script>
+    <script src="./js/public_jquery.js"></script>
+    <script src="./js/public_module.js"></script>
+    <script src="./js/about.js"></script>
+</body>
+</html>

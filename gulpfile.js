@@ -7,8 +7,10 @@ const babel=require('gulp-babel')
 const htmlmin = require('gulp-htmlmin')
 const del=require('del')
 const webserver =require('gulp-webserver')
-const include=require('gulp-file-include')
 const pxtorem = require('gulp-pxtorem');
+const rename = require('gulp-rename'); 
+const htmltpl = require('gulp-html-tpl')
+const artTemplate = require('art-template')
 const pxtoremOptions = {
     rootValue: 32,
     unitPrecision: 6,
@@ -25,41 +27,41 @@ const postcssOptions = {
     ]
 }
 
-const cssHandler=function(){
+const lessHandler=function(){
     return gulp
-    .src(['./src/less/**/*.less','./src/less/*.less'])
+    .src(['./src/public/less/*.less','./src/pages/**/*.less','./src/components/**/*.less'])
     .pipe(gulpLess({
         javascriptEnabled: true
     }))
     .pipe(autoprefixer())
     .pipe(pxtorem(pxtoremOptions, postcssOptions))
     .pipe(cssmin())
-    .pipe(gulp.dest('./dist/css'))
+    .pipe(rename({dirname:''}))
+    .pipe(gulp.dest('./m/css'))
 }
 
-const cssHandler2=function(){
+const cssHandler=function(){
     return gulp
-        .src(['./src/css/**/*.css','./src/css/*.css'])
-        .pipe(gulp.dest('./dist/css'))
+        .src('./src/static/css/*.css')
+        .pipe(cssmin())
+        .pipe(rename({dirname:''}))
+        .pipe(gulp.dest('./m/css'))
 }
 
 const jsHandler=function(){
     return gulp
-    .src(['./src/js/**/*.js','./src/js/*.js'])
+    .src(['./src/public/js/*.js','./src/pages/**/*.js'])
     .pipe(babel({
         presets:['@babel/env']
     }))
     .pipe(uglify())
-    .pipe(gulp.dest('./dist/js'))
+    .pipe(rename({dirname:''}))
+    .pipe(gulp.dest('./m/js'))
 }
 
 const htmlHandler=function(){
     return gulp
-    .src('./src/html/*.html')
-    .pipe(include({
-        prefix:"@-@",
-        basepath:'./src/components'
-    }))
+    .src('./src/pages/**/*.html')
     .pipe(htmlmin({
         collapseWhitespace: true,
         removeComments: true, //删除注释
@@ -70,48 +72,62 @@ const htmlHandler=function(){
         minifyJS: true,  //压缩页面JS
         minifyCSS: true  //压缩页面CSS
     }))
-    .pipe(gulp.dest('./dist/html'))
+    .pipe(htmltpl({
+        tag:'template',
+        paths:['./src/components'],
+        engine:function(template,data){
+            return template && artTemplate.compile(template)(data)
+        },
+        data:{
+            header:false,
+            footer:false
+        }
+    }))
+    .pipe(rename({dirname:''}))
+    .pipe(gulp.dest('./m'))
 }
 
 const imgHandler=function(){
     return gulp
-    .src('./src/images/**')
-    .pipe(gulp.dest('./dist/images'))
+    .src('./src/static/images/**')
+    .pipe(gulp.dest('./m/images'))
 }
 
 const fontHandler=function(){
     return gulp
-    .src('./src/font/**')
-    .pipe(gulp.dest('./dist/font'))
+    .src('./src/static/font/**')
+    .pipe(gulp.dest('./m/font'))
 }
 
 const delHandler=function(){
-    return del(['./dist'])
+    return del(['./m'])
 }
 
 const webHandler=function(){
     return gulp
-    .src('./dist')
+    .src('./m')
     .pipe(webserver({
         host:'localhost',
         port:'8080',
         livereload:true,  
-        open:'./html/index.html',
+        open:'./index.html',
         proxies:[]
     }))
 }
 
 const watchHandler=function(){
-    gulp.watch('./src/less/**/*.less',cssHandler),
-    gulp.watch('./src/less/*.less',cssHandler),
-    gulp.watch('./src/js/*.js',jsHandler),
-    gulp.watch('./src/js/**/*.js',jsHandler),
-    gulp.watch('./src/html/*.html',htmlHandler),
-    gulp.watch('./src/components/*.html',htmlHandler)
+    gulp.watch('./src/public/less/*.less',lessHandler),
+    gulp.watch('./src/pages/**/*.less',lessHandler),
+    gulp.watch('./src/components/**/*.less',lessHandler),
+    gulp.watch('./src/static/css/*.css',cssHandler),
+    gulp.watch('./src/public/js/*.js',jsHandler),
+    gulp.watch('./src/pages/**/*.js',jsHandler),
+    gulp.watch('./src/pages/**/*.html',htmlHandler),
+    gulp.watch('./src/components/**/*.html',htmlHandler)
 }
 module.exports.default=gulp.series(
     delHandler,
-    gulp.parallel(cssHandler,jsHandler,htmlHandler,imgHandler,fontHandler,cssHandler2),
+    gulp.parallel(lessHandler,jsHandler,htmlHandler,imgHandler,fontHandler,cssHandler),
     webHandler,
     watchHandler
 )
