@@ -1,29 +1,41 @@
-<!--
- * @Author: your name
- * @Date: 2021-07-13 09:51:14
- * @LastEditTime: 2021-08-31 10:07:15
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /gulp-template/README.md
--->
+[TOC]
+
+## 使用说明
+
 ``` shell
 npm i
 ```
 ```shell
 gulp
 ```
-目录说明
-components--公共组件
-pages--页面
-public--公共样式/js
-static--静态资源（公共的css直接放到这里）
+## 目录说明
+
+- components--公共组件
+  - xxx
+    - xxx.html
+    - xxx.less
+    - xxx.js
+- pages--页面
+  - xxx
+    - xxx.html
+    - xxx.less
+    - xxx.js
+- public--公共样式/js
+  - less
+  - js
+- static--静态资源（公共的css直接放到这里）
+  - font
+  - Images
+
+------
 
 所有页面全部放在pages文件夹内
 除了a标签，所有资源引用路径按照正常引入
 a标签跳转页面，路径都是相对于页面的同级路径
 例如 a.html跳到b.html 只需   href='./b.html'
 
-使用下拉框
+## 使用下拉框
+
 ```html
 <!--在html中-->
 <select id="select">
@@ -36,11 +48,12 @@ a标签跳转页面，路径都是相对于页面的同级路径
 </select>
 ```
 ---
-使用弹窗
+## 使用弹窗
+
 ```html
 <!--在html中-->
-<script src="../js/public/jquery.js"></script>
-<script src="../js/public/public_module.js"></script>
+<script src="../../public/js/public_jquery.js"></script>
+<script src="../../public/js/public_module.js"></script>
 ```
 ```less
 /* less中 */
