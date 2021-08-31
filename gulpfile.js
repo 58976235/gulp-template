@@ -42,6 +42,11 @@ const postcssOptions = {
 const lessHandler=function(){
     return gulp
     .src(['./src/public/less/*.less','./src/pages/**/*.less','./src/components/**/*.less'])
+    .pipe(gulpLess({
+        javascriptEnabled: true
+    }))
+    .pipe(autoprefixer())
+    .pipe(pxtorem(pxtoremOptions, postcssOptions))
     .pipe(resolvePath(options))
     .pipe(through.obj(function (chunk, enc, cb) {
         let contents=chunk.contents.toString()
@@ -56,11 +61,6 @@ const lessHandler=function(){
         chunk.contents=Buffer.from(newContents) */
         cb(null,chunk)
       }))
-    .pipe(gulpLess({
-        javascriptEnabled: true
-    }))
-    .pipe(autoprefixer())
-    .pipe(pxtorem(pxtoremOptions, postcssOptions))
     .pipe(cssmin())
     .pipe(rename({dirname:''}))
     .pipe(gulp.dest('./m/css'))
@@ -76,7 +76,7 @@ const cssHandler=function(){
 
 const jsHandler=function(){
     return gulp
-    .src(['./src/public/js/*.js','./src/pages/**/*.js'])
+    .src(['./src/public/js/*.js','./src/pages/**/*.js','./src/components/**/*.js'])
     .pipe(babel({
         presets:['@babel/env']
     }))
@@ -145,7 +145,7 @@ const webHandler=function(){
     .src('./m')
     .pipe(webserver({
         host:'localhost',
-        port:'8080',
+        port:'8081',
         livereload:true,  
         open:'./index.html',
         proxies:[]
@@ -159,6 +159,7 @@ const watchHandler=function(){
     gulp.watch('./src/static/css/*.css',cssHandler),
     gulp.watch('./src/public/js/*.js',jsHandler),
     gulp.watch('./src/pages/**/*.js',jsHandler),
+    gulp.watch('./src/components/**/*.js',jsHandler),
     gulp.watch('./src/pages/**/*.html',htmlHandler),
     gulp.watch('./src/components/**/*.html',htmlHandler)
 }

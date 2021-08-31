@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-08-30 16:38:33
+ * @LastEditTime: 2021-08-31 11:15:44
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /gulp-template/README.md
+-->
 [TOC]
 
 ## 使用说明
@@ -24,6 +32,7 @@ gulp
   - less
   - js
 - static--静态资源（公共的css直接放到这里）
+  - css 
   - font
   - Images
 
