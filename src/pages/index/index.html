@@ -7,8 +7,7 @@
     <meta name="keywords" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>首页</title>
-    <!-- 引用css 都是相对路径 css文件夹下的css -->
-    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./index.less">
 </head>
 <body>
     <div>
@@ -21,17 +20,19 @@
             <option value="6">选择六</option>
         </select>
     </div>
+    <img src="../../static/images/banner.png" alt="">
     <button onclick="openModal()">打开弹窗</button>
-    <!-- 公共底部 -->
     <div class="aaaaaaa"></div>
+    <!-- 公共底部 -->
 
+    <!-- 跳转页面，路径都按同级路径来 -->
     <a href="./about.html">关于</a>
 
     <template src='footer/footer.html' title='首页' msg='打dasd' footer></template>
 
-    <script src="./js/public_js_fontSize.js"></script>
-    <script src="./js/public_jquery.js"></script>
-    <script src="./js/public_module.js"></script>
-    <script src="./js/index.js"></script>
+    <script src="../../public/js/public_js_fontSize.js"></script>
+    <script src="../../public/js/public_jquery.js"></script>
+    <script src="../../public/js/public_module.js"></script>
+    <script src="./index.js"></script>
 </body>
 </html>

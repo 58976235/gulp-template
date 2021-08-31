@@ -11,6 +11,18 @@ const pxtorem = require('gulp-pxtorem');
 const rename = require('gulp-rename'); 
 const htmltpl = require('gulp-html-tpl')
 const artTemplate = require('art-template')
+const resolvePath = require("gulp-resolve-path");
+const through = require('through2')
+const options = {
+    /*
+     root: process.cwd(),
+     ext: {
+     template: ['html'],
+     script: ['js'],
+     style: ['css', 'less', 'sass']
+     }
+     */
+};
 const pxtoremOptions = {
     rootValue: 32,
     unitPrecision: 6,
@@ -30,6 +42,20 @@ const postcssOptions = {
 const lessHandler=function(){
     return gulp
     .src(['./src/public/less/*.less','./src/pages/**/*.less','./src/components/**/*.less'])
+    .pipe(resolvePath(options))
+    .pipe(through.obj(function (chunk, enc, cb) {
+        let contents=chunk.contents.toString()
+        let newContents=contents.replace(/\/src\/static/g,'../')
+        chunk.contents=Buffer.from(newContents)
+        /* let fileName=chunk.relative.split('/')[0]
+        let contents=chunk.contents.toString()
+        let newContents=contents.replace('/src/pages/'+fileName+'/'+fileName+'.less','./css/'+fileName+'.css')
+        newContents=newContents.replace(/\/src\/public\/js/g,'./js')
+        newContents=newContents.replace('/src/pages/'+fileName+'/'+fileName+'.js','./js/'+fileName+'.js')
+        newContents=newContents.replace(/\/src\/static/g,'.')
+        chunk.contents=Buffer.from(newContents) */
+        cb(null,chunk)
+      }))
     .pipe(gulpLess({
         javascriptEnabled: true
     }))
@@ -62,6 +88,17 @@ const jsHandler=function(){
 const htmlHandler=function(){
     return gulp
     .src('./src/pages/**/*.html')
+    .pipe(resolvePath(options))
+    .pipe(through.obj(function (chunk, enc, cb) {
+        let fileName=chunk.relative.split('/')[0]
+        let contents=chunk.contents.toString()
+        let newContents=contents.replace('/src/pages/'+fileName+'/'+fileName+'.less','./css/'+fileName+'.css')
+        newContents=newContents.replace(/\/src\/public\/js/g,'./js')
+        newContents=newContents.replace('/src/pages/'+fileName+'/'+fileName+'.js','./js/'+fileName+'.js')
+        newContents=newContents.replace(/\/src\/static/g,'.')
+        chunk.contents=Buffer.from(newContents)
+        cb(null,chunk)
+      }))
     .pipe(htmlmin({
         collapseWhitespace: true,
         removeComments: true, //删除注释

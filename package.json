@@ -28,5 +28,9 @@
   },
   "browserslist": [
     "last 2 versions"
-  ]
+  ],
+  "dependencies": {
+    "gulp-resolve-path": "^1.0.5",
+    "through2": "^4.0.2"
+  }
 }
