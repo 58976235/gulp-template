@@ -24,6 +24,12 @@ const options = {
    */
 };
 
+
+const css = baseUrl + projectName + '/' + 'css/'
+const js = baseUrl + projectName + '/' + 'js/'
+const img = baseUrl + projectName + '/' + 'images/'
+const font = baseUrl + projectName + '/' + 'fonts/'
+
 const knownOptions = {
   string: 'env',
   default: { env: process.env.NODE_ENV || 'production' }
@@ -60,8 +66,6 @@ const lessHandler = function () {
       let contents = chunk.contents.toString()
       let newContents = contents
       if (gulpOptions.env === 'production') {
-        let img = baseUrl + 'images/' + projectName + '/'
-        let font = baseUrl + 'fonts/' + projectName + '/'
         //newContents = contents.replace(/\/src\/static/g, '..')
         newContents = newContents.replace(/\\src\\static\\images\\/g, img)
         newContents = newContents.replace(/\\src\\static\\font\\/g, font)
@@ -115,11 +119,8 @@ const htmlHandler = function () {
       let newContents = contents
 
       if (gulpOptions.env === 'production') {
-        let css = baseUrl + 'css/' + projectName + '/'
-        let js = baseUrl + 'js/' + projectName + '/'
-        let img = baseUrl + 'images/' + projectName + '/'
         newContents = contents.replace('/src/pages/' + fileName + '/' + fileName + '.less', css + fileName + '.css')
-        newContents = newContents.replace('\\src\\pages\\' + fileName + '\\' + fileName + '.less', css+ fileName + '.css')
+        newContents = newContents.replace('\\src\\pages\\' + fileName + '\\' + fileName + '.less', css + fileName + '.css')
         newContents = newContents.replace('/src/static/css/', css)
         newContents = newContents.replace('\\src\\static\\css\\', css)
         newContents = newContents.replace(/\/src\/public\/js\//g, js)
@@ -141,7 +142,7 @@ const htmlHandler = function () {
         newContents = newContents.replace(/\\src\\static\\/g, './')
         newContents = newContents.replace('../../components/', '')
         newContents = newContents.replace('..\\..\\components\\', '')
-        
+
       }
       chunk.contents = Buffer.from(newContents)
       cb(null, chunk)
@@ -184,14 +185,14 @@ const webHandler = function () {
 
 const watchHandler = function () {
   gulp.watch('./src/public/less/*.less', lessHandler),
-    gulp.watch('./src/pages/**/*.less', lessHandler),
-    gulp.watch('./src/components/**/*.less', lessHandler),
-    gulp.watch('./src/static/css/*.css', cssHandler),
-    gulp.watch('./src/pages/**/*.js', jsHandler),
-    gulp.watch('./src/public/js/*.js', publicJsHandler),
-    gulp.watch('./src/components/**/*.js', jsHandler),
-    gulp.watch('./src/pages/**/*.html', htmlHandler),
-    gulp.watch('./src/components/**/*.html', htmlHandler)
+  gulp.watch('./src/pages/**/*.less', lessHandler),
+  gulp.watch('./src/components/**/*.less', lessHandler),
+  gulp.watch('./src/static/css/*.css', cssHandler),
+  gulp.watch('./src/pages/**/*.js', jsHandler),
+  gulp.watch('./src/public/js/*.js', publicJsHandler),
+  gulp.watch('./src/components/**/*.js', jsHandler),
+  gulp.watch('./src/pages/**/*.html', htmlHandler),
+  gulp.watch('./src/components/**/*.html', htmlHandler)
 }
 
 
