@@ -67,12 +67,16 @@ const lessHandler = function () {
       let newContents = contents
       if (gulpOptions.env === 'production') {
         //newContents = contents.replace(/\/src\/static/g, '..')
-        newContents = newContents.replace(/\\src\\static\\images\\/g, img)
-        newContents = newContents.replace(/\\src\\static\\font\\/g, font)
+        newContents = newContents.replace('/src/static/images/', img)
+        newContents = newContents.replace('/src/static/font', font)
+        newContents = newContents.replace('\\src\\static\\images\\', img)
+        newContents = newContents.replace('\\src\\static\\font', font)
       } else {
         //newContents = contents.replace(/\/src\/static/g, '..')
-        newContents = newContents.replace(/\\src\\static\\images\\/g, '../images/')
-        newContents = newContents.replace(/\\src\\static\\font\\/g, '../font/')
+        newContents = newContents.replace('/src/static/images/', '../images/')
+        newContents = newContents.replace('/src/static/font', '../font/')
+        newContents = newContents.replace('\\src\\static\\images\\', '../images/')
+        newContents = newContents.replace('\\src\\static\\font', '../font/')
       }
       chunk.contents = Buffer.from(newContents)
       cb(null, chunk)
