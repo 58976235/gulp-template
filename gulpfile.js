@@ -179,11 +179,11 @@ const webHandler = function () {
       port: '8081',
       livereload: true,
       open: './index.html',
-      /* proxies:[
+      proxies:[
           {
-              source: '/api', target: 'http://localhost:3000'  //后端地址
+              source: '/api', target: 'http://admin.lhblog.vip/api'  //后端地址
           }
-      ] */
+      ]
     }))
 }
 
