@@ -45,7 +45,7 @@ const pxtoremOptions = {
   replace: true,
   mediaQuery: false,
   minPixelValue: 2,
-  exclude: /node_modules/
+  exclude: /node_modules/i
 }
 const postcssOptions = {
   processors: [
@@ -140,8 +140,8 @@ const htmlHandler = function () {
         newContents = contents.replace('.less','.css')
         newContents = newContents.replace('/src/pages/' + fileName + '/' + fileName + '.css', './css/' + fileName + '.css')
         newContents = newContents.replace('\\src\\pages\\' + fileName + '\\' + fileName + '.css', './css/' + fileName + '.css')
-        newContents = newContents.replace('/src/public/less', './css')
-        newContents = newContents.replace('\\src\\public\\less', './css')
+        newContents = newContents.replace('/src/public/less/', './css/')
+        newContents = newContents.replace('\\src\\public\\less\\', './css/')
         newContents = newContents.replace('/src/static/css/', './css/')
         newContents = newContents.replace('\\src\\static\\css\\', './css/')
         newContents = newContents.replace(/\/src\/public\/js/g, './js')
@@ -185,11 +185,11 @@ const webHandler = function () {
       port: '8081',
       livereload: true,
       open: './index.html',
-      // proxies:[
-      //     {
-      //         source: '/api', target: 'http://admin.lhblog.vip/api'  //后端地址
-      //     }
-      // ]
+      proxies:[
+          {
+              source: '/api', target: 'http://admin.lhblog.vip/api'  //后端地址
+          }
+      ]
     }))
 }
 
