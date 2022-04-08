@@ -123,8 +123,11 @@ const htmlHandler = function () {
       let newContents = contents
 
       if (gulpOptions.env === 'production') {
-        newContents = contents.replace('/src/pages/' + fileName + '/' + fileName + '.less', css + fileName + '.css')
-        newContents = newContents.replace('\\src\\pages\\' + fileName + '\\' + fileName + '.less', css + fileName + '.css')
+        newContents = contents.replace('.less','.css')
+        newContents = newContents.replace('/src/pages/' + fileName + '/' + fileName + '.css', css + fileName + '.css')
+        newContents = newContents.replace('\\src\\pages\\' + fileName + '\\' + fileName + '.css', css + fileName + '.css')
+        newContents = newContents.replace('/src/public/less/', css)
+        newContents = newContents.replace('\\src\\public\\less\\', css)
         newContents = newContents.replace('/src/static/css/', css)
         newContents = newContents.replace('\\src\\static\\css\\', css)
         newContents = newContents.replace(/\/src\/public\/js\//g, js)
@@ -134,8 +137,11 @@ const htmlHandler = function () {
         newContents = newContents.replace(/\/src\/static\/images\//g, img)
         newContents = newContents.replace(/\\src\\static\\images\\/g, img)
       } else {
-        newContents = contents.replace('/src/pages/' + fileName + '/' + fileName + '.less', './css/' + fileName + '.css')
-        newContents = newContents.replace('\\src\\pages\\' + fileName + '\\' + fileName + '.less', './css/' + fileName + '.css')
+        newContents = contents.replace('.less','.css')
+        newContents = newContents.replace('/src/pages/' + fileName + '/' + fileName + '.css', './css/' + fileName + '.css')
+        newContents = newContents.replace('\\src\\pages\\' + fileName + '\\' + fileName + '.css', './css/' + fileName + '.css')
+        newContents = newContents.replace('/src/public/less', './css')
+        newContents = newContents.replace('\\src\\public\\less', './css')
         newContents = newContents.replace('/src/static/css/', './css/')
         newContents = newContents.replace('\\src\\static\\css\\', './css/')
         newContents = newContents.replace(/\/src\/public\/js/g, './js')
@@ -179,11 +185,11 @@ const webHandler = function () {
       port: '8081',
       livereload: true,
       open: './index.html',
-      /* proxies:[
-          {
-              source: '/api', target: 'http://localhost:3000'  //后端地址
-          }
-      ] */
+      // proxies:[
+      //     {
+      //         source: '/api', target: 'http://admin.lhblog.vip/api'  //后端地址
+      //     }
+      // ]
     }))
 }
 
