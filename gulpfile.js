@@ -45,7 +45,7 @@ const pxtoremOptions = {
   replace: true,
   mediaQuery: false,
   minPixelValue: 2,
-  exclude: /node_modules/i
+  exclude: /node_modules/
 }
 const postcssOptions = {
   processors: [
