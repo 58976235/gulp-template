@@ -12,7 +12,7 @@ const pxtorem = require('gulp-pxtorem');
 const rename = require('gulp-rename');
 const resolvePath = require("gulp-resolve-path");
 const through = require('through2')
-const { projectName, baseUrl,satrtFile } = require("./config")
+const { projectName, baseUrl, satrtFile } = require("./config")
 const options = {
   /*
    root: process.cwd(),
@@ -33,9 +33,9 @@ const gulpOptions = minimist(process.argv.slice(2), knownOptions);
 
 
 // 设置路径
-let css = baseUrl + projectName + '/' + 'css/'
-let js = baseUrl + projectName + '/' + 'js/'
-let static = baseUrl + projectName + '/'
+let css = baseUrl + '/' + projectName + '/' + 'css/'
+let js = baseUrl + '/' + projectName + '/' + 'js/'
+let static = baseUrl + '/' + projectName + '/'
 
 if (gulpOptions.env === 'env') {
   css = './css/'
@@ -51,7 +51,7 @@ const pxtoremOptions = {
   replace: true,
   mediaQuery: false,
   minPixelValue: 2,
-  exclude: /node_modules/i
+  exclude: /node_modules/
 }
 const postcssOptions = {
   processors: [
@@ -61,7 +61,7 @@ const postcssOptions = {
 
 const lessHandler = function () {
   return gulp
-    .src(['./src/public/less/*.less', './src/pages/**/*.less', './src/components/**/*.less'])
+    .src(['./src/pages/**/*.less'])
     .pipe(gulpLess({
       javascriptEnabled: true
     }))
@@ -73,15 +73,11 @@ const lessHandler = function () {
       let newContents = contents
       if (gulpOptions.env === 'production') {
         //newContents = contents.replace(/\/src\/static/g, '..')
-        newContents = newContents.replace(/\/src\/static\/images\//g, img)
-        newContents = newContents.replace(/\/src\/static\/font\//g, font)
-        newContents = newContents.replace(/\\src\\static\\images\\/g, img)
-        newContents = newContents.replace(/\\src\\static\\font\\/g, font)
+        newContents = newContents.replace(/\/src\/static\//g, static)
+        newContents = newContents.replace(/\\src\\static\\/g, static)
       } else {
-        newContents = newContents.replace(/\/src\/static\/images\//g, '../images/')
-        newContents = newContents.replace(/\/src\/static\/font\//g, '../font/')
-        newContents = newContents.replace(/\\src\\static\\images\\/g, '../images/')
-        newContents = newContents.replace(/\\src\\static\\font\\/g, '../font/')
+        newContents = newContents.replace(/\/src\/static\//g, '../')
+        newContents = newContents.replace(/\\src\\static\\/g, '../')
       }
       chunk.contents = Buffer.from(newContents)
       cb(null, chunk)
@@ -90,18 +86,43 @@ const lessHandler = function () {
     .pipe(rename({ dirname: '' }))
     .pipe(gulp.dest('./m/css'))
 }
+const publicLessHandler = function () {
+  return gulp
+    .src(['./src/public/less/**/*'])
+    .pipe(gulpLess({
+      javascriptEnabled: true
+    }))
+    .pipe(autoprefixer())
+    .pipe(pxtorem(pxtoremOptions, postcssOptions))
+    .pipe(resolvePath(options))
+    .pipe(through.obj(function (chunk, enc, cb) {
+      let contents = chunk.contents.toString()
+      let newContents = contents
+      if (gulpOptions.env === 'production') {
+        //newContents = contents.replace(/\/src\/static/g, '..')
+        newContents = newContents.replace(/\/src\/static\//g, static)
+        newContents = newContents.replace(/\\src\\static\\/g, static)
+      } else {
+        newContents = newContents.replace(/\/src\/static\//g, '../')
+        newContents = newContents.replace(/\\src\\static\\/g, '../')
+      }
+      chunk.contents = Buffer.from(newContents)
+      cb(null, chunk)
+    }))
+    .pipe(gulpif(gulpOptions.env === 'production', cssmin()))
+    .pipe(gulp.dest('./m/css'))
+}
 
 const cssHandler = function () {
   return gulp
-    .src('./src/static/css/*.css')
+    .src('./src/static/css/**/*')
     .pipe(gulpif(gulpOptions.env === 'production', cssmin()))
-    .pipe(rename({ dirname: '' }))
     .pipe(gulp.dest('./m/css'))
 }
 
 const jsHandler = function () {
   return gulp
-    .src(['./src/pages/**/*.js', './src/components/**/*.js'])
+    .src(['./src/pages/**/*.js'])
     .pipe(gulpif(gulpOptions.env === 'production', babel({
       presets: ['@babel/env']
     })))
@@ -112,9 +133,10 @@ const jsHandler = function () {
 
 const publicJsHandler = function () {
   return gulp
-    .src(['./src/public/js/*.js'])
-    .pipe(rename({ dirname: '' }))
-    .pipe(gulp.dest('./m/js'))
+    .src(['./src/public/js/**/*'])
+    .pipe(
+      gulp.dest('./m/js')
+    )
 }
 
 const htmlHandler = function () {
@@ -154,13 +176,13 @@ const htmlHandler = function () {
 
 const imgHandler = function () {
   return gulp
-    .src('./src/static/images/**')
+    .src('./src/static/images/**/*')
     .pipe(gulp.dest('./m/images'))
 }
 
 const fontHandler = function () {
   return gulp
-    .src('./src/static/font/**')
+    .src('./src/static/font/**/*')
     .pipe(gulp.dest('./m/font'))
 }
 
@@ -175,7 +197,7 @@ const webHandler = function () {
       host: 'localhost',
       port: '8081',
       livereload: true,
-      open: './'+satrtFile+'.html',
+      open: './' + satrtFile + '.html',
       proxies: [
         // {
         //   source: '/api', target: 'http://admin.lhblog.vip/api'  //后端地址
@@ -185,21 +207,20 @@ const webHandler = function () {
 }
 
 const watchHandler = function () {
-  gulp.watch('./src/public/less/*.less', lessHandler),
+  gulp.watch('./src/public/less/**/*', publicLessHandler),
     gulp.watch('./src/pages/**/*.less', lessHandler),
-    gulp.watch('./src/components/**/*.less', lessHandler),
-    gulp.watch('./src/static/css/*.css', cssHandler),
+    gulp.watch('./src/static/css/**/*', cssHandler),
     gulp.watch('./src/pages/**/*.js', jsHandler),
-    gulp.watch('./src/public/js/*.js', publicJsHandler),
-    gulp.watch('./src/components/**/*.js', jsHandler),
+    gulp.watch('./src/public/js/**/*', publicJsHandler),
     gulp.watch('./src/pages/**/*.html', htmlHandler),
-    gulp.watch('./src/components/**/*.html', htmlHandler)
+    gulp.watch('./src/static/images/**/*', imgHandler),
+    gulp.watch('./src/static/font/**/*', fontHandler)
 }
 
 
 exports.default = gulp.series(
   delHandler,
-  gulp.parallel(lessHandler, publicJsHandler, jsHandler, htmlHandler, imgHandler, fontHandler, cssHandler),
+  gulp.parallel(lessHandler,publicLessHandler, publicJsHandler, jsHandler, htmlHandler, imgHandler, fontHandler, cssHandler),
   webHandler,
   watchHandler
 )
