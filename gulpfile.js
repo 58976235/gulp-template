@@ -12,7 +12,7 @@ const pxtorem = require('gulp-pxtorem');
 const rename = require('gulp-rename');
 const resolvePath = require("gulp-resolve-path");
 const through = require('through2')
-const { projectName, baseUrl } = require("./config")
+const { projectName, baseUrl,satrtFile } = require("./config")
 const options = {
   /*
    root: process.cwd(),
@@ -24,18 +24,24 @@ const options = {
    */
 };
 
-
-const css = baseUrl + projectName + '/' + 'css/'
-const js = baseUrl + projectName + '/' + 'js/'
-const img = baseUrl + projectName + '/' + 'images/'
-const font = baseUrl + projectName + '/' + 'fonts/'
-
 const knownOptions = {
   string: 'env',
   default: { env: process.env.NODE_ENV || 'production' }
 };
 
 const gulpOptions = minimist(process.argv.slice(2), knownOptions);
+
+
+// 设置路径
+let css = baseUrl + projectName + '/' + 'css/'
+let js = baseUrl + projectName + '/' + 'js/'
+let static = baseUrl + projectName + '/'
+
+if (gulpOptions.env === 'env') {
+  css = './css/'
+  js = './js/'
+  static = './'
+}
 
 const pxtoremOptions = {
   rootValue: 32,
@@ -119,40 +125,26 @@ const htmlHandler = function () {
       let arr = chunk.relative.split('/').length > 1 ? chunk.relative.split('/') : chunk.relative.split('\\')
       let fileName = arr[0]
       let contents = chunk.contents.toString()
-      let newContents = contents.replace(/\.less/g,'.css')
+      let newContents = contents.replace(/\.less/g, '.css')
 
       let cssPathReg = new RegExp('/src\/pages\/' + fileName + '\/' + fileName + '.css')
       let cssPathRegWindows = new RegExp('\\\\src\\\\pages\\\\' + fileName + '\\\\' + fileName + '.css')
       let jsPathReg = new RegExp('/src\/pages\/' + fileName + '\/' + fileName + '.js')
       let jsPathRegWindows = new RegExp('\\\\src\\\\pages\\\\' + fileName + '\\\\' + fileName + '.js')
-      
-      if (gulpOptions.env === 'production') {
-        newContents = newContents.replace(cssPathReg, css + fileName + '.css')
-        newContents = newContents.replace(cssPathRegWindows, css + fileName + '.css')
-        newContents = newContents.replace(/\/src\/public\/less\//g, css)
-        newContents = newContents.replace(/\\src\\public\\less\\/g, css)
-        newContents = newContents.replace(/\/src\/static\/css\//g, css)
-        newContents = newContents.replace(/\\src\\static\\css\\/g, css)
-        newContents = newContents.replace(/\/src\/public\/js\//g, js)
-        newContents = newContents.replace(/\\src\\public\\js\\/g, js)
-        newContents = newContents.replace(jsPathReg, js + fileName + '.js')
-        newContents = newContents.replace(jsPathRegWindows, js + fileName + '.js')
-        newContents = newContents.replace(/\/src\/static\/images\//g, img)
-        newContents = newContents.replace(/\\src\\static\\images\\/g, img)
-      } else {
-        newContents = newContents.replace(cssPathReg, './css/' + fileName + '.css')
-        newContents = newContents.replace(cssPathRegWindows, './css/' + fileName + '.css')
-        newContents = newContents.replace(/\/src\/public\/less\//g, './css/')
-        newContents = newContents.replace(/\\src\\public\\less\\/g, './css/')
-        newContents = newContents.replace(/\/src\/static\/css\//g, './css/')
-        newContents = newContents.replace(/\\src\\static\\css\\/g, './css/')
-        newContents = newContents.replace(/\/src\/public\/js/g, './js')
-        newContents = newContents.replace(/\\src\\public\\js\\/g, './js/')
-        newContents = newContents.replace(jsPathReg, './js/' + fileName + '.js')
-        newContents = newContents.replace(/\/src\/static/g, '.')
-        newContents = newContents.replace(jsPathRegWindows, './js/' + fileName + '.js')
-        newContents = newContents.replace(/\\src\\static\\/g, './')
-      }
+
+      newContents = newContents.replace(cssPathReg, css + fileName + '.css')
+      newContents = newContents.replace(cssPathRegWindows, css + fileName + '.css')
+      newContents = newContents.replace(/\/src\/public\/less\//g, css)
+      newContents = newContents.replace(/\\src\\public\\less\\/g, css)
+      newContents = newContents.replace(/\/src\/static\/css\//g, css)
+      newContents = newContents.replace(/\\src\\static\\css\\/g, css)
+      newContents = newContents.replace(/\/src\/public\/js\//g, js)
+      newContents = newContents.replace(/\\src\\public\\js\\/g, js)
+      newContents = newContents.replace(jsPathReg, js + fileName + '.js')
+      newContents = newContents.replace(jsPathRegWindows, js + fileName + '.js')
+      newContents = newContents.replace(/\/src\/static\//g, static)
+      newContents = newContents.replace(/\\src\\static\\/g, static)
+
       chunk.contents = Buffer.from(newContents)
       cb(null, chunk)
     }))
@@ -183,11 +175,11 @@ const webHandler = function () {
       host: 'localhost',
       port: '8081',
       livereload: true,
-      open: './index.html',
+      open: './'+satrtFile+'.html',
       proxies: [
-        {
-          source: '/api', target: 'http://admin.lhblog.vip/api'  //后端地址
-        }
+        // {
+        //   source: '/api', target: 'http://admin.lhblog.vip/api'  //后端地址
+        // }
       ]
     }))
 }
