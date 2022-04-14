@@ -37,6 +37,7 @@ let css = baseUrl + '/' + projectName + '/' + 'css/'
 let js = baseUrl + '/' + projectName + '/' + 'js/'
 let static = baseUrl + '/' + projectName + '/'
 
+
 if (gulpOptions.env === 'env') {
   css = './css/'
   js = './js/'
@@ -139,6 +140,8 @@ const publicJsHandler = function () {
     )
 }
 
+
+
 const htmlHandler = function () {
   return gulp
     .src('./src/pages/**/*.html')
@@ -156,6 +159,7 @@ const htmlHandler = function () {
 
       newContents = newContents.replace(cssPathReg, css + fileName + '.css')
       newContents = newContents.replace(cssPathRegWindows, css + fileName + '.css')
+      
       newContents = newContents.replace(/\/src\/public\/less\//g, css)
       newContents = newContents.replace(/\\src\\public\\less\\/g, css)
       newContents = newContents.replace(/\/src\/static\/css\//g, css)
